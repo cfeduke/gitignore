@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'open-uri'
+
+$gitignore = File.new('.gitignore', 'a')
+
+def get_url(profile)
+  begin
+    STDOUT.print "#{profile}..."
+    open("https://raw.github.com/github/gitignore/master/#{profile}.gitignore") do |r|
+      STDOUT.puts "\tsuccess"
+      r.lines.each do |line|
+        $gitignore.puts line
+      end
+    end
+  rescue OpenURI::HTTPError
+    STDOUT.puts "\tfailure"
+    if profile =~ /Global/
+      return false
+    else
+      return get_url("Global/#{profile}")
+    end
+  end
+end
+
+ARGV.each do |arg|
+  get_url arg
+end
+
+$gitignore.close
+
+lines = IO.readlines('.gitignore')
+$gitignore = File.new('.gitignore', 'w')
+lines.map { |item| item.strip } \
+  .reject{ |item| item.length == 0 || item.start_with?('#') } \
+  .sort \
+  .uniq \
+  .each do |line|
+    $gitignore.puts line
+  end
+$gitignore.close
