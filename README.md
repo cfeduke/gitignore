@@ -26,6 +26,23 @@ is the same as
 
 (But it makes two HTTP requests to figure that out.)
 
+Installation
+============
+
+gitignore requires Ruby with no additional gems. It has been tested on 1.9.3 and
+should work with 1.8.7. To install symlink the gitignore script somewhere in your
+`$PATH`:
+
+    git clone git://github.com/cfeduke/gitignore.git
+    cd gitignore
+    ln -s `pwd`/gitignore ~/bin/gitignore
+
+Or (in the directory where you want to clone the repo, e.g., `~/Projects`):
+
+    TODO
+
+This simple installation assumes you have a `~/bin` and its in your `$PATH`.
+
 Usage
 =====
 
@@ -42,14 +59,3 @@ Usage
       gitignore Eclipse Scala vim SBT
 
     
-Installation
-============
-
-gitignore requires Ruby with no additional gems. It has been tested on 1.9.3 and
-should work with 1.8.7. To install symlink the gitignore script somewhere in your
-$PATH:
-
-    git clone git://github.com/cfeduke/gitignore.git
-    cd gitignore
-    ln -s `pwd`/gitignore ~/bin/gitignore
-
