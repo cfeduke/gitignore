@@ -1,20 +1,62 @@
 #!/usr/bin/env ruby
 
 require 'open-uri'
+require 'getoptlong'
 
-$gitignore = File.new('.gitignore', 'a')
+opts = GetoptLong.new(
+  [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
+  [ '--file', '-f', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--version', GetoptLong::NO_ARGUMENT ],
+  [ '--verbose', '-v', GetoptLong::NO_ARGUMENT ],
+)
+
+file_name = '.gitignore'
+$verbose = false
+opts.each do |opt, arg|
+  case opt
+  when '--help'
+    puts <<-HELP
+
+Retrieves n gitignore profiles from Github, combines them into the specified 
+file (.gitignore in the current directory by default), removes duplicate lines
+and sorts the file. Alters the output file if it exists; will add subsequent
+profiles on subsequent invocations.
+
+usage: gitignore [option] args
+options:
+  -h, --help:       usage information
+  -f, --file:       specify output filename (default: ".gitignore")
+args:
+  .gitignore profile names (e.g., Eclipse, Java, Scala, etc.)
+
+example:
+  gitignore Eclipse Scala vim SBT
+
+HELP
+    exit 1
+  when '--version'
+    puts 'gitignore 0.0.1'
+    exit 1
+  when '--verbose'
+    $verbose = true
+  when '--file'
+    file_name = arg
+  end
+end
+
+$gitignore = File.new(file_name, 'a')
 
 def get_url(profile)
   begin
-    STDOUT.print "#{profile}..."
+    $stdout.print "#{profile}..." if $verbose
     open("https://raw.github.com/github/gitignore/master/#{profile}.gitignore") do |r|
-      STDOUT.puts "\tsuccess"
+      $stdout.puts "\tsuccess" if $verbose
       r.lines.each do |line|
         $gitignore.puts line
       end
     end
   rescue OpenURI::HTTPError
-    STDOUT.puts "\tfailure"
+    $stdout.puts "\tfailure" if $verbose
     if profile =~ /Global/
       return false
     else
@@ -29,8 +71,8 @@ end
 
 $gitignore.close
 
-lines = IO.readlines('.gitignore')
-$gitignore = File.new('.gitignore', 'w')
+lines = IO.readlines(file_name)
+$gitignore = File.new(file_name, 'w')
 lines.map { |item| item.strip } \
   .reject{ |item| item.length == 0 || item.start_with?('#') } \
   .sort \
