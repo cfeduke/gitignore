@@ -39,7 +39,7 @@ should work with 1.8.7. To install symlink the gitignore script somewhere in you
 
 Or (in the directory where you want to clone the repo, e.g., `~/Projects`):
 
-    TODO
+    curl -L https://raw.github.com/cfeduke/gitignore/master/install.sh | sh
 
 This simple installation assumes you have a `~/bin` and its in your `$PATH`.
 
