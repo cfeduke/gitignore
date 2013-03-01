@@ -24,8 +24,10 @@ profiles on subsequent invocations.
 
 usage: gitignore [option] args
 options:
-  -h, --help:       usage information
   -f, --file:       specify output filename (default: ".gitignore")
+  -v, --verbose:    verbose output 
+  -h, --help:       usage information
+  --version:        version information
 args:
   .gitignore profile names (e.g., Eclipse, Java, Scala, etc.)
 
