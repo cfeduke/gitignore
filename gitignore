@@ -7,11 +7,11 @@ opts = GetoptLong.new(
   [ '--help', '-h', GetoptLong::NO_ARGUMENT ],
   [ '--file', '-f', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--version', GetoptLong::NO_ARGUMENT ],
-  [ '--verbose', '-v', GetoptLong::NO_ARGUMENT ],
+  [ '--silent', '-s', GetoptLong::NO_ARGUMENT ],
 )
 
 file_name = '.gitignore'
-$verbose = false
+$verbose = true
 opts.each do |opt, arg|
   case opt
   when '--help'
@@ -37,10 +37,10 @@ example:
 HELP
     exit 1
   when '--version'
-    puts 'gitignore 0.0.1'
+    puts 'gitignore 0.1.0'
     exit 1
-  when '--verbose'
-    $verbose = true
+  when '--silent'
+    $verbose = false
   when '--file'
     file_name = arg
   end
@@ -51,7 +51,7 @@ $gitignore = File.new(file_name, 'a')
 def get_url(profile)
   begin
     $stdout.print "#{profile}..." if $verbose
-    open("https://raw.github.com/github/gitignore/master/#{profile}.gitignore") do |r|
+    open("https://raw.githubusercontent.com/github/gitignore/master/#{profile}.gitignore") do |r|
       $stdout.puts "\tsuccess" if $verbose
       r.lines.each do |line|
         $gitignore.puts line
